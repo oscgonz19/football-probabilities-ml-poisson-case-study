@@ -53,6 +53,12 @@ Fuentes de Datos (API Deportiva, API Clima, Servicio ML)
     Salida: Probabilidades + Flags de Valor
 ```
 
+## Proyectos Relacionados
+
+| Proyecto | Descripcion |
+|----------|-------------|
+| [football-expected-goals-ml-pipeline](https://github.com/oscgonz19/football-expected-goals-ml-pipeline) | El servicio de prediccion ML que se integra con este sistema. Incluye modelado de goles esperados, pipelines de entrenamiento y endpoints de prediccion. |
+
 ---
 
 *Ningun credencial, URL interna, ni detalle de implementacion propietario esta incluido en este repositorio.*

@@ -55,6 +55,12 @@ Data Sources (Sports API, Weather API, ML Service)
     Output: Probabilities + Value Flags
 ```
 
+## Related Projects
+
+| Project | Description |
+|---------|-------------|
+| [football-expected-goals-ml-pipeline](https://github.com/oscgonz19/football-expected-goals-ml-pipeline) | The ML prediction service that integrates with this system. Features expected goals modeling, training pipelines, and prediction API endpoints. |
+
 ## License
 
 This case study documentation is provided for portfolio purposes.
