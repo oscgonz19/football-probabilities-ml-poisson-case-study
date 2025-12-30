@@ -8,9 +8,13 @@ Este sistema calcula probabilidades pre-partido para partidos de futbol y las co
 
 ## Documentacion
 
-| Documento | Descripcion |
-|-----------|-------------|
-| [Caso de Estudio Principal](football-prediction-case-study.md) | Caso de estudio completo para portafolio |
+| Documento | Descripcion | Audiencia |
+|-----------|-------------|-----------|
+| [Caso de Estudio Principal](football-prediction-case-study.md) | Caso de estudio completo para portafolio | General |
+| [Resumen Ejecutivo](case-study-executive-summary.md) | Vision general con diagrama de arquitectura | Recruiters / Managers |
+| [Anexo Tecnico](case-study-technical-appendix.md) | Documentacion tecnica detallada | Tech Leads / Ingenieros |
+| [Pipeline Explicado](probability-pipeline-explained.md) | Como funciona el pipeline de prediccion | Data Scientists / ML Engineers |
+| [Formulas Matematicas](probability-pipeline-formulas.md) | Distribucion Poisson y derivaciones | Estadisticos / Quants |
 
 ## Caracteristicas Principales
 
