@@ -1,5 +1,7 @@
 # Football Probability Prediction System
 
+🌐 **[Versión en Español](es/README.md)** | English
+
 A case study documenting the architecture and implementation of a sports probability prediction engine that combines ML predictions with traditional Poisson-based statistical methods.
 
 ## Overview
