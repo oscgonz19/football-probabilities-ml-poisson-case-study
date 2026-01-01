@@ -1,12 +1,72 @@
 # Football Probability Prediction System
 
-🌐 **[Versión en Español](es/README.md)** | English
+**[Version en Espanol](es/README.md)** | English
 
 A case study documenting the architecture and implementation of a sports probability prediction engine that combines ML predictions with traditional Poisson-based statistical methods.
+
+---
+
+## Match Prediction Example
+
+<p align="center">
+  <img src="images/05_match_prediction.png" alt="Match Prediction Dashboard" width="800"/>
+</p>
+
+*Complete prediction output: 1X2 probabilities, expected goals (xG), BTTS, and Over/Under markets.*
+
+---
 
 ## Overview
 
 This system calculates pre-match probabilities for football matches and compares them against market odds to identify positive expected value (+EV) opportunities. It features a hybrid architecture with automatic fallback—ensuring predictions complete even when external ML services are unavailable.
+
+### Goals Distribution Analysis
+
+<p align="center">
+  <img src="images/01_goals_distribution.png" alt="Goals Distribution" width="750"/>
+</p>
+
+*Home teams average 1.70 goals vs 1.34 for away teams—the foundation of our Poisson model.*
+
+---
+
+## How It Works
+
+### 1. Team Strength Modeling
+
+<p align="center">
+  <img src="images/03_team_strength.png" alt="Team Strength Analysis" width="700"/>
+</p>
+
+Each team is positioned by offensive strength (goals scored) vs defensive strength (goals conceded). Size indicates sample size, color shows goal difference. Teams in the bottom-right quadrant (high attack, low concede) are the strongest.
+
+### 2. Poisson Score Matrix
+
+<p align="center">
+  <img src="images/06_probability_grid.png" alt="Score Probability Matrix" width="650"/>
+</p>
+
+Using expected goals (xG), we build a probability matrix for every possible scoreline. The most likely result (1-1 at 12.4%) anchors our market calculations.
+
+### 3. Model Calibration
+
+<p align="center">
+  <img src="images/04_calibration.png" alt="Calibration Plot" width="550"/>
+</p>
+
+*When we predict 60% probability, events occur ~60% of the time. The closer to the diagonal, the better calibrated.*
+
+---
+
+## Historical Performance
+
+<p align="center">
+  <img src="images/02_results_by_season.png" alt="Results by Season" width="700"/>
+</p>
+
+Four seasons of data show consistent home advantage (~44-46% home wins) with stable patterns—validating our modeling assumptions.
+
+---
 
 ## Documentation
 
@@ -30,6 +90,8 @@ Interactive diagrams and visual explanations of the system. **[Browse all visual
 | [xG Weighted Calculation](visualizations/04-xg-weighted-calculation.md) | Temporal weighting methodology |
 | [Poisson Score Matrix](visualizations/05-poisson-score-matrix.md) | From xG to match probabilities |
 | [Value Detection](visualizations/06-value-detection.md) | Market comparison and +EV identification |
+
+---
 
 ## Key Features
 
