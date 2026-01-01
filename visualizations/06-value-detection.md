@@ -311,33 +311,22 @@ Value Flags: BTTS Yes (+9%), Over 2.5 (+9%)
 ```mermaid
 mindmap
   root((Value<br/>Detection))
-    :::core
     Edge Identification
-      :::edge
       Find mispriced markets
       Systematic approach
       Data-driven decisions
     Risk Management
-      :::risk
       Only act on positive EV
       Threshold filtering
       Avoid marginal bets
     Long-term Profitability
-      :::profit
       Law of large numbers
       Compound edge over time
       Discipline over luck
     Market Efficiency
-      :::market
       Exploit slow market updates
       React to new information
       Beat closing line
-
-  classDef core fill:#0f172a,color:#e5e7eb,stroke:#020617,stroke-width:3px
-  classDef edge fill:#065f46,color:#ecfdf5,stroke:#064e3b,stroke-width:2px
-  classDef risk fill:#92400e,color:#fffbeb,stroke:#78350f,stroke-width:2px
-  classDef profit fill:#1e3a8a,color:#eff6ff,stroke:#1e40af,stroke-width:2px
-  classDef market fill:#312e81,color:#eef2ff,stroke:#1e1b4b,stroke-width:2px
 
 
 ```
