@@ -1,5 +1,7 @@
 # Sistema de Prediccion de Probabilidades de Futbol
 
+**[English Version](../README.md)** | Espanol
+
 Un caso de estudio documentando la arquitectura e implementacion de un motor de prediccion de probabilidades deportivas que combina predicciones ML con metodos estadisticos tradicionales basados en Poisson.
 
 ## Resumen
@@ -15,6 +17,19 @@ Este sistema calcula probabilidades pre-partido para partidos de futbol y las co
 | [Anexo Tecnico](case-study-technical-appendix.md) | Documentacion tecnica detallada | Tech Leads / Ingenieros |
 | [Pipeline Explicado](probability-pipeline-explained.md) | Como funciona el pipeline de prediccion | Data Scientists / ML Engineers |
 | [Formulas Matematicas](probability-pipeline-formulas.md) | Distribucion Poisson y derivaciones | Estadisticos / Quants |
+
+## Visualizaciones
+
+Diagramas interactivos y explicaciones visuales del sistema. **[Ver todas las visualizaciones →](../visualizations/README.md)** *(en ingles)*
+
+| Visualizacion | Descripcion |
+|---------------|-------------|
+| [Arquitectura del Sistema](../visualizations/01-system-architecture.md) | Vision de componentes y responsabilidades |
+| [Pipeline de Flujo de Datos](../visualizations/02-data-flow-pipeline.md) | Transformacion de datos de extremo a extremo |
+| [ML + Fallback Poisson](../visualizations/03-ml-poisson-fallback.md) | Arbol de decision de prediccion hibrida |
+| [Calculo de xG Ponderado](../visualizations/04-xg-weighted-calculation.md) | Metodologia de ponderacion temporal |
+| [Matriz de Puntajes Poisson](../visualizations/05-poisson-score-matrix.md) | De xG a probabilidades de partido |
+| [Deteccion de Valor](../visualizations/06-value-detection.md) | Comparacion de mercado e identificacion +EV |
 
 ## Caracteristicas Principales
 

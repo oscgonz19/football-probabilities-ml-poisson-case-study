@@ -18,6 +18,19 @@ This system calculates pre-match probabilities for football matches and compares
 | [Pipeline Explained](probability-pipeline-explained.md) | How the prediction pipeline works | Data Scientists / ML Engineers |
 | [Mathematical Formulas](probability-pipeline-formulas.md) | Poisson distribution and probability derivations | Statisticians / Quants |
 
+## Visualizations
+
+Interactive diagrams and visual explanations of the system. **[Browse all visualizations →](visualizations/README.md)**
+
+| Visualization | Description |
+|---------------|-------------|
+| [System Architecture](visualizations/01-system-architecture.md) | Component overview with layer responsibilities |
+| [Data Flow Pipeline](visualizations/02-data-flow-pipeline.md) | End-to-end data transformation journey |
+| [ML + Poisson Fallback](visualizations/03-ml-poisson-fallback.md) | Hybrid prediction decision tree |
+| [xG Weighted Calculation](visualizations/04-xg-weighted-calculation.md) | Temporal weighting methodology |
+| [Poisson Score Matrix](visualizations/05-poisson-score-matrix.md) | From xG to match probabilities |
+| [Value Detection](visualizations/06-value-detection.md) | Market comparison and +EV identification |
+
 ## Key Features
 
 - **Hybrid ML + Statistical Architecture**: Attempts ML predictions first, falls back to Poisson calculations automatically
