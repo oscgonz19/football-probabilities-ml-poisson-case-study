@@ -2,77 +2,112 @@
 
 **[English Version](../README.md)** | Español
 
-Un caso de estudio documentando la arquitectura e implementación de un motor de predicción de probabilidades deportivas que combina predicciones ML con métodos estadísticos tradicionales basados en Poisson.
+Un caso de estudio documentando la arquitectura e implementación de un motor de predicción de probabilidades deportivas que combina predicciones ML con métodos estadísticos basados en Poisson.
 
 ---
 
-<p align="center">
-  <img src="../images/05_match_prediction.png" alt="Dashboard de Predicción" width="800"/>
-</p>
+## Vista General del Sistema
 
-<p align="center"><em>Ejemplo de salida: probabilidades 1X2, goles esperados (xG), BTTS y mercados Over/Under para un partido.</em></p>
+```mermaid
+flowchart TB
+    subgraph Fuentes["Fuentes de Datos"]
+        API1[API Datos Deportivos]
+        API2[API Clima]
+        API3[Servicio ML]
+    end
+
+    subgraph Core["Sistema Central"]
+        ING[Ingesta de Datos<br/>Rate Limited]
+        DB[(PostgreSQL)]
+        STATS[Motor Estadístico<br/>Promedios xG Ponderados]
+    end
+
+    subgraph Prediccion["Pipeline de Predicción"]
+        ML_CHECK{ML Disponible?}
+        ML_PATH[Predicciones ML]
+        POISSON[Fallback Poisson]
+        VALUE[Detección de Valor]
+    end
+
+    subgraph Salida["Salida"]
+        PROB[Probabilidades<br/>1X2, BTTS, O/U]
+        FLAGS[Señales +EV]
+    end
+
+    API1 & API2 --> ING --> DB --> STATS
+    STATS --> ML_CHECK
+    API3 -.->|Opcional| ML_CHECK
+    ML_CHECK -->|Sí| ML_PATH --> VALUE
+    ML_CHECK -->|No/Timeout| POISSON --> VALUE
+    VALUE --> PROB & FLAGS
+```
 
 ---
 
-## Resumen
-
-Este sistema calcula probabilidades pre-partido para partidos de fútbol y las compara contra cuotas del mercado para identificar oportunidades de valor esperado positivo (+EV). Presenta una arquitectura híbrida con fallback automático—asegurando que las predicciones se completen incluso cuando los servicios ML externos no están disponibles.
-
-**Características Principales:**
+## Características Principales
 
 - **Arquitectura Híbrida ML + Estadística** — Predicciones ML primero, fallback Poisson automático
 - **Tolerancia a Respuestas Parciales** — Maneja respuestas ML incompletas gracefully
-- **Testing de Contrato** — Valida invariantes matemáticos (rangos de probabilidad, consistencia)
+- **Testing de Contrato** — Valida invariantes matemáticos (rangos, consistencia)
 - **Detección de Valor** — Compara probabilidades calculadas contra cuotas del mercado
 
 ---
 
-## Cómo Funciona
+## Flujo de Predicción
 
-<table>
-<tr>
-<td width="50%">
+```mermaid
+flowchart LR
+    subgraph Entrada
+        XG[Valores xG<br/>por Equipo]
+    end
 
-### Modelado de Fortaleza de Equipos
+    subgraph Proceso
+        MATRIX[Construir Matriz<br/>11x11 probabilidades]
+        MARKETS[Calcular Mercados]
+    end
 
-Cada equipo se posiciona por fortaleza ofensiva (goles anotados) vs fortaleza defensiva (goles recibidos). Los equipos en el cuadrante inferior derecho son los más fuertes.
+    subgraph Mercados
+        M1[1X2]
+        M2[BTTS]
+        M3[Over/Under]
+    end
 
-</td>
-<td width="50%">
+    subgraph Comparar
+        IMPLIED[Cuotas Implícitas]
+        MARKET[Cuotas Mercado]
+        EV{Valor?}
+    end
 
-<img src="../images/03_team_strength.png" alt="Fortaleza de Equipos" width="400"/>
+    XG --> MATRIX --> MARKETS
+    MARKETS --> M1 & M2 & M3
+    M1 & M2 & M3 --> IMPLIED
+    IMPLIED --> EV
+    MARKET --> EV
+    EV -->|Sí| FLAG["Flag +EV"]
+    EV -->|No| SKIP[Omitir]
+```
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+---
 
-### Matriz de Puntajes Poisson
+## Estrategia de Fallback ML
 
-Usando goles esperados (xG), construimos una matriz de probabilidad para cada marcador posible. Cada celda muestra la probabilidad de ese resultado exacto.
+```mermaid
+flowchart TB
+    START[Solicitud de Predicción] --> CHECK{Servicio ML<br/>Disponible?}
+    CHECK -->|Sí| CALL[Llamar API ML<br/>timeout: 5s]
+    CHECK -->|No| POISSON[Cálculo Poisson]
 
-</td>
-<td width="50%">
+    CALL --> RESPONSE{Estado de<br/>Respuesta?}
+    RESPONSE -->|200 OK| VALIDATE{Todos los<br/>Campos?}
+    RESPONSE -->|Timeout/Error| POISSON
 
-<img src="../images/06_probability_grid.png" alt="Matriz de Puntajes" width="400"/>
+    VALIDATE -->|Sí| USE_ML[Usar Predicciones ML]
+    VALIDATE -->|Parcial| HYBRID[ML + Poisson<br/>para campos faltantes]
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+    USE_ML & HYBRID & POISSON --> OUTPUT[Probabilidades Finales]
 
-### Calibración del Modelo
-
-Cuando predecimos 60% de probabilidad, los eventos ocurren ~60% del tiempo. Mientras más cerca de la diagonal, mejor calibrado el modelo.
-
-</td>
-<td width="50%">
-
-<img src="../images/04_calibration.png" alt="Calibración" width="400"/>
-
-</td>
-</tr>
-</table>
+    style OUTPUT fill:#90EE90
+```
 
 ---
 
@@ -80,22 +115,15 @@ Cuando predecimos 60% de probabilidad, los eventos ocurren ~60% del tiempo. Mien
 
 | Documento | Descripción | Audiencia |
 |-----------|-------------|-----------|
-| [Caso de Estudio Principal](football-prediction-case-study.md) | Caso de estudio completo para portafolio | General |
-| [Resumen Ejecutivo](case-study-executive-summary.md) | Visión general con diagrama de arquitectura | Recruiters / Managers |
-| [Anexo Técnico](case-study-technical-appendix.md) | Documentación técnica detallada | Tech Leads / Ingenieros |
-| [Pipeline Explicado](probability-pipeline-explained.md) | Cómo funciona el pipeline de predicción | Data Scientists / ML Engineers |
-| [Fórmulas Matemáticas](probability-pipeline-formulas.md) | Distribución Poisson y derivaciones | Estadísticos / Quants |
+| [Caso de Estudio Principal](football-prediction-case-study.md) | Caso de estudio completo | General |
+| [Resumen Ejecutivo](case-study-executive-summary.md) | Visión general | Recruiters / Managers |
+| [Anexo Técnico](case-study-technical-appendix.md) | Documentación técnica | Tech Leads / Ingenieros |
+| [Pipeline Explicado](probability-pipeline-explained.md) | Pipeline de predicción | Data Scientists / ML Engineers |
+| [Fórmulas Matemáticas](probability-pipeline-formulas.md) | Derivaciones Poisson | Estadísticos / Quants |
 
 ## Diagramas Técnicos
 
-Diagramas de arquitectura y flujo basados en Mermaid. **[Ver todos →](../visualizations/README.md)** *(en inglés)*
-
-| Diagrama | Descripción |
-|----------|-------------|
-| [Arquitectura del Sistema](../visualizations/01-system-architecture.md) | Vista de componentes y responsabilidades |
-| [Pipeline de Flujo de Datos](../visualizations/02-data-flow-pipeline.md) | Transformación de datos de extremo a extremo |
-| [ML + Fallback Poisson](../visualizations/03-ml-poisson-fallback.md) | Árbol de decisión de predicción híbrida |
-| [Matriz de Puntajes Poisson](../visualizations/05-poisson-score-matrix.md) | De xG a probabilidades de partido |
+Más diagramas Mermaid detallados. **[Ver todos →](../visualizations/README.md)** *(en inglés)*
 
 ---
 
@@ -107,7 +135,7 @@ Diagramas de arquitectura y flujo basados en Mermaid. **[Ver todos →](../visua
 | Base de Datos | PostgreSQL |
 | Cliente HTTP | Faraday (retry/backoff) |
 | Testing | RSpec |
-| Optimización | L-BFGS-B (calibración de finishing offset) |
+| Optimización | L-BFGS-B |
 
 ---
 
@@ -115,14 +143,8 @@ Diagramas de arquitectura y flujo basados en Mermaid. **[Ver todos →](../visua
 
 | Proyecto | Descripción |
 |----------|-------------|
-| [football-expected-goals-ml-pipeline](https://github.com/oscgonz19/football-expected-goals-ml-pipeline) | El servicio de predicción ML que se integra con este sistema. Incluye modelado de goles esperados, pipelines de entrenamiento y endpoints de predicción. |
+| [football-expected-goals-ml-pipeline](https://github.com/oscgonz19/football-expected-goals-ml-pipeline) | El servicio de predicción ML que se integra con este sistema |
 
 ---
 
-## Licencia
-
-Esta documentación de caso de estudio se proporciona para propósitos de portafolio.
-
----
-
-*Ningún credencial, URL interna, ni detalle de implementación propietario está incluido en este repositorio.*
+*Sin credenciales, URLs internas, ni detalles de implementación propietarios.*

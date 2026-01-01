@@ -6,19 +6,45 @@ A case study documenting the architecture and implementation of a sports probabi
 
 ---
 
-<p align="center">
-  <img src="images/05_match_prediction.png" alt="Match Prediction Dashboard" width="800"/>
-</p>
+## System Overview
 
-<p align="center"><em>Sample output: 1X2 probabilities, expected goals (xG), BTTS, and Over/Under markets for a single match.</em></p>
+```mermaid
+flowchart TB
+    subgraph DataSources["Data Sources"]
+        API1[Sports Data API]
+        API2[Weather API]
+        API3[ML Service]
+    end
+
+    subgraph Core["Core System"]
+        ING[Data Ingestion<br/>Rate Limited]
+        DB[(PostgreSQL)]
+        STATS[Statistics Engine<br/>xG Weighted Averages]
+    end
+
+    subgraph Prediction["Prediction Pipeline"]
+        ML_CHECK{ML Available?}
+        ML_PATH[ML Predictions]
+        POISSON[Poisson Fallback]
+        VALUE[Value Detection]
+    end
+
+    subgraph Output["Output"]
+        PROB[Probabilities<br/>1X2, BTTS, O/U]
+        FLAGS[+EV Signals]
+    end
+
+    API1 & API2 --> ING --> DB --> STATS
+    STATS --> ML_CHECK
+    API3 -.->|Optional| ML_CHECK
+    ML_CHECK -->|Yes| ML_PATH --> VALUE
+    ML_CHECK -->|No/Timeout| POISSON --> VALUE
+    VALUE --> PROB & FLAGS
+```
 
 ---
 
-## Overview
-
-This system calculates pre-match probabilities for football matches and compares them against market odds to identify positive expected value (+EV) opportunities. It features a hybrid architecture with automatic fallback—ensuring predictions complete even when external ML services are unavailable.
-
-**Key Features:**
+## Key Features
 
 - **Hybrid ML + Statistical Architecture** — ML predictions first, Poisson fallback automatically
 - **Partial Response Tolerance** — Handles incomplete ML responses gracefully
@@ -27,52 +53,61 @@ This system calculates pre-match probabilities for football matches and compares
 
 ---
 
-## How It Works
+## Prediction Flow
 
-<table>
-<tr>
-<td width="50%">
+```mermaid
+flowchart LR
+    subgraph Input
+        XG[Team xG Values]
+    end
 
-### Team Strength Modeling
+    subgraph Process
+        MATRIX[Build Score Matrix<br/>11x11 probabilities]
+        MARKETS[Calculate Markets]
+    end
 
-Each team is positioned by offensive strength (goals scored) vs defensive strength (goals conceded). Teams in the bottom-right quadrant are the strongest.
+    subgraph Markets
+        M1[1X2]
+        M2[BTTS]
+        M3[Over/Under]
+    end
 
-</td>
-<td width="50%">
+    subgraph Compare
+        IMPLIED[Implied Odds]
+        MARKET[Market Odds]
+        EV{Value?}
+    end
 
-<img src="images/03_team_strength.png" alt="Team Strength" width="400"/>
+    XG --> MATRIX --> MARKETS
+    MARKETS --> M1 & M2 & M3
+    M1 & M2 & M3 --> IMPLIED
+    IMPLIED --> EV
+    MARKET --> EV
+    EV -->|Yes| FLAG["+EV Flag"]
+    EV -->|No| SKIP[Skip]
+```
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+---
 
-### Poisson Score Matrix
+## ML Fallback Strategy
 
-Using expected goals (xG), we build a probability matrix for every possible scoreline. Each cell shows the probability of that exact result.
+```mermaid
+flowchart TB
+    START[Prediction Request] --> CHECK{ML Service<br/>Available?}
+    CHECK -->|Yes| CALL[Call ML API<br/>timeout: 5s]
+    CHECK -->|No| POISSON[Poisson Calculation]
 
-</td>
-<td width="50%">
+    CALL --> RESPONSE{Response<br/>Status?}
+    RESPONSE -->|200 OK| VALIDATE{All Fields<br/>Present?}
+    RESPONSE -->|Timeout/Error| POISSON
 
-<img src="images/06_probability_grid.png" alt="Score Matrix" width="400"/>
+    VALIDATE -->|Yes| USE_ML[Use ML Predictions]
+    VALIDATE -->|Partial| HYBRID[ML + Poisson<br/>for missing fields]
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+    USE_ML & HYBRID & POISSON --> OUTPUT[Final Probabilities]
 
-### Model Calibration
-
-When we predict 60% probability, events occur ~60% of the time. The closer to the diagonal, the better calibrated the model.
-
-</td>
-<td width="50%">
-
-<img src="images/04_calibration.png" alt="Calibration" width="400"/>
-
-</td>
-</tr>
-</table>
+    style OUTPUT fill:#90EE90
+```
 
 ---
 
@@ -81,21 +116,14 @@ When we predict 60% probability, events occur ~60% of the time. The closer to th
 | Document | Description | Audience |
 |----------|-------------|----------|
 | [Main Case Study](football-prediction-case-study.md) | Complete portfolio case study | General |
-| [Executive Summary](case-study-executive-summary.md) | High-level overview with architecture diagram | Recruiters / Managers |
-| [Technical Appendix](case-study-technical-appendix.md) | Detailed technical documentation | Tech Leads / Engineers |
-| [Pipeline Explained](probability-pipeline-explained.md) | How the prediction pipeline works | Data Scientists / ML Engineers |
-| [Mathematical Formulas](probability-pipeline-formulas.md) | Poisson distribution and probability derivations | Statisticians / Quants |
+| [Executive Summary](case-study-executive-summary.md) | High-level overview | Recruiters / Managers |
+| [Technical Appendix](case-study-technical-appendix.md) | Detailed technical docs | Tech Leads / Engineers |
+| [Pipeline Explained](probability-pipeline-explained.md) | Prediction pipeline | Data Scientists / ML Engineers |
+| [Mathematical Formulas](probability-pipeline-formulas.md) | Poisson derivations | Statisticians / Quants |
 
 ## Technical Diagrams
 
-Mermaid-based architecture and flow diagrams. **[Browse all →](visualizations/README.md)**
-
-| Diagram | Description |
-|---------|-------------|
-| [System Architecture](visualizations/01-system-architecture.md) | Component overview with layer responsibilities |
-| [Data Flow Pipeline](visualizations/02-data-flow-pipeline.md) | End-to-end data transformation |
-| [ML + Poisson Fallback](visualizations/03-ml-poisson-fallback.md) | Hybrid prediction decision tree |
-| [Poisson Score Matrix](visualizations/05-poisson-score-matrix.md) | From xG to match probabilities |
+More detailed Mermaid diagrams. **[Browse all →](visualizations/README.md)**
 
 ---
 
@@ -107,7 +135,7 @@ Mermaid-based architecture and flow diagrams. **[Browse all →](visualizations/
 | Database | PostgreSQL |
 | HTTP Client | Faraday (retry/backoff) |
 | Testing | RSpec |
-| Optimization | L-BFGS-B (finishing offset calibration) |
+| Optimization | L-BFGS-B |
 
 ---
 
@@ -115,14 +143,8 @@ Mermaid-based architecture and flow diagrams. **[Browse all →](visualizations/
 
 | Project | Description |
 |---------|-------------|
-| [football-expected-goals-ml-pipeline](https://github.com/oscgonz19/football-expected-goals-ml-pipeline) | The ML prediction service that integrates with this system. Features expected goals modeling, training pipelines, and prediction API endpoints. |
+| [football-expected-goals-ml-pipeline](https://github.com/oscgonz19/football-expected-goals-ml-pipeline) | The ML prediction service that integrates with this system |
 
 ---
 
-## License
-
-This case study documentation is provided for portfolio purposes.
-
----
-
-*No credentials, internal URLs, or proprietary implementation details are included in this repository.*
+*No credentials, internal URLs, or proprietary implementation details included.*
