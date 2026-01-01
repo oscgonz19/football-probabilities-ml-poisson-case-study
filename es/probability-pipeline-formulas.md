@@ -4,6 +4,16 @@
 
 ---
 
+## Vision General
+
+<p align="center">
+  <img src="../images/06_probability_grid.png" alt="Matriz de Probabilidades" width="600"/>
+</p>
+
+<p align="center"><em>La matriz de puntajes Poisson: cada celda muestra P(local anota i, visita anota j). Esta es la salida principal del pipeline matematico descrito abajo.</em></p>
+
+---
+
 ## 1. Promedio xG Ponderado
 
 ```
@@ -78,6 +88,12 @@ xG_final = xG_ajustado × e^(α_final)
 ---
 
 ## 4. Distribucion Poisson
+
+<p align="center">
+  <img src="../images/01_goals_distribution.png" alt="Distribucion de Goles" width="650"/>
+</p>
+
+<p align="center"><em>Datos reales: los goles siguen distribuciones Poisson con λ_local ≈ 1.70 y λ_visita ≈ 1.34.</em></p>
 
 ### 4.1 Funcion de Masa de Probabilidad
 

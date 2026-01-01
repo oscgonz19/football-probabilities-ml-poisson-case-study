@@ -4,6 +4,16 @@
 
 ---
 
+## Visual Overview
+
+<p align="center">
+  <img src="images/06_probability_grid.png" alt="Score Probability Matrix" width="600"/>
+</p>
+
+<p align="center"><em>The Poisson score matrix: each cell shows P(home scores i, away scores j). This is the core output of the mathematical pipeline below.</em></p>
+
+---
+
 ## 1. Weighted xG Average
 
 ```
@@ -78,6 +88,12 @@ xG_final = xG_adjusted × e^(α_final)
 ---
 
 ## 4. Poisson Distribution
+
+<p align="center">
+  <img src="images/01_goals_distribution.png" alt="Goals Distribution" width="650"/>
+</p>
+
+<p align="center"><em>Real data: goals follow Poisson distributions with λ_home ≈ 1.70 and λ_away ≈ 1.34.</em></p>
 
 ### 4.1 Probability Mass Function
 

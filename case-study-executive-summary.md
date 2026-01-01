@@ -4,11 +4,25 @@
 
 ---
 
+<p align="center">
+  <img src="images/05_match_prediction.png" alt="Match Prediction Dashboard" width="800"/>
+</p>
+
+<p align="center"><em>Sample prediction output: 1X2 probabilities, expected goals (xG), BTTS, and Over/Under markets.</em></p>
+
+---
+
 ## Context
 
 Sports odds encode implied probabilities, but they also include bookmaker margin and market inefficiencies. This project builds an independent probability engine that estimates pre-match probabilities and compares them against market odds to flag potential positive expected value (+EV) signals.
 
 The system runs as a daily pipeline across multiple football leagues, producing probabilities for three core markets: match result (1X2), both teams to score (BTTS), and total goals (Over/Under). It combines historical performance, expected goals (xG), weather conditions, and optional predictions from an external ML service—without making the ML dependency a single point of failure.
+
+<p align="center">
+  <img src="images/01_goals_distribution.png" alt="Goals Distribution" width="700"/>
+</p>
+
+<p align="center"><em>Goals follow a Poisson distribution: home teams average 1.70 goals vs 1.34 for away teams.</em></p>
 
 ---
 
@@ -89,13 +103,35 @@ The system transforms raw match data into market probabilities through these sta
 
 5. **Probability Calculation**: Request predictions from the ML service when available; otherwise calculate using Poisson distribution with finishing efficiency offsets. The system falls back automatically if ML is unavailable or returns partial data.
 
+<p align="center">
+  <img src="images/06_probability_grid.png" alt="Score Probability Matrix" width="600"/>
+</p>
+
+<p align="center"><em>Poisson probability matrix: each cell shows the probability of that exact scoreline.</em></p>
+
 6. **Value Detection**: Compare calculated probabilities against market odds. When implied odds are lower than market odds, flag the opportunity as +EV.
 
 7. **Persistence**: Store all probabilities, adjusted metrics, and value flags for downstream consumption.
 
 ---
 
+## Team Analysis
+
+<p align="center">
+  <img src="images/03_team_strength.png" alt="Team Strength" width="700"/>
+</p>
+
+<p align="center"><em>Teams positioned by attack vs defense strength. Bottom-right quadrant = strongest teams.</em></p>
+
+---
+
 ## Results
+
+<p align="center">
+  <img src="images/04_calibration.png" alt="Model Calibration" width="500"/>
+</p>
+
+<p align="center"><em>Model calibration: predictions align with actual outcomes (diagonal = perfect calibration).</em></p>
 
 The system runs daily to process matchdays across multiple leagues, with:
 

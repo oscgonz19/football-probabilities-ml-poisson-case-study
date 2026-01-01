@@ -4,9 +4,25 @@
 
 ---
 
+<p align="center">
+  <img src="images/05_match_prediction.png" alt="Match Prediction Example" width="800"/>
+</p>
+
+<p align="center"><em>Complete prediction output showing 1X2 probabilities, expected goals, and market opportunities.</em></p>
+
+---
+
 ## What is This System
 
 This is a sports probability prediction engine that calculates pre-match probabilities for football matches and compares them against market odds to identify positive expected value (+EV) opportunities. The system runs as a daily automated pipeline across multiple leagues, combining historical team performance, expected goals (xG) metrics, weather data, and optional machine learning predictions. It produces probabilities for three core markets—match result (1X2), both teams to score (BTTS), and total goals (Over/Under)—while maintaining operational continuity through a hybrid architecture that doesn't depend on any single external service.
+
+### The Data Foundation
+
+<p align="center">
+  <img src="images/01_goals_distribution.png" alt="Goals Distribution" width="700"/>
+</p>
+
+<p align="center"><em>Historical goals distribution: home teams average 1.70 goals vs 1.34 for away teams. These Poisson-like distributions form the mathematical basis of our prediction model.</em></p>
 
 ---
 
@@ -76,6 +92,14 @@ I designed and implemented the integration layer between the baseline statistica
 
 The system ingests data from a sports statistics provider and a weather API, stores normalized records in PostgreSQL, processes multi-season statistics with temporal weighting, and runs predictions through a hybrid pipeline. The ML service is called when available but is never a hard dependency—the statistical fallback ensures every match gets processed.
 
+### Team Strength Analysis
+
+<p align="center">
+  <img src="images/03_team_strength.png" alt="Team Strength Analysis" width="700"/>
+</p>
+
+<p align="center"><em>Teams positioned by attack (goals scored) vs defense (goals conceded). Size = sample size, color = goal difference.</em></p>
+
 ---
 
 ## How It Works
@@ -91,6 +115,12 @@ The pipeline transforms raw match data into market probabilities through seven s
 4. **Pre-Match xG Assignment**: Assign expected goals to each team based on their offensive/defensive performance, normalized by league context (home/away differentials).
 
 5. **Probability Calculation**: Request predictions from the ML service if available. On timeout, error, or partial response, automatically fall back to Poisson distribution calculations with finishing efficiency adjustments.
+
+<p align="center">
+  <img src="images/06_probability_grid.png" alt="Score Probability Matrix" width="600"/>
+</p>
+
+<p align="center"><em>Poisson-based probability matrix: each cell shows the probability of that exact scoreline.</em></p>
 
 6. **Value Detection**: Compare calculated probabilities against market odds. When implied odds (1/probability) are lower than market odds, flag the opportunity as positive expected value.
 
@@ -148,7 +178,23 @@ Regression tests catch contract drift that mocked tests would miss—response st
 
 ---
 
+## Historical Validation
+
+<p align="center">
+  <img src="images/02_results_by_season.png" alt="Results by Season" width="700"/>
+</p>
+
+<p align="center"><em>Four seasons of data show consistent patterns: ~44-46% home wins, ~21-25% draws, ~29-35% away wins. This stability validates our modeling assumptions.</em></p>
+
+---
+
 ## Results
+
+<p align="center">
+  <img src="images/04_calibration.png" alt="Model Calibration" width="550"/>
+</p>
+
+<p align="center"><em>Calibration plot: when we predict 60%, events occur ~60% of the time. Diagonal = perfect calibration.</em></p>
 
 The system runs daily across multiple leagues, processing full matchdays through the hybrid pipeline.
 

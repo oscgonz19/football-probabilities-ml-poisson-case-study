@@ -4,6 +4,14 @@
 
 ---
 
+<p align="center">
+  <img src="images/06_probability_grid.png" alt="Score Probability Matrix" width="650"/>
+</p>
+
+<p align="center"><em>The end result: a probability matrix for every possible scoreline, derived from expected goals.</em></p>
+
+---
+
 ## Overview
 
 This document explains how raw team statistics are transformed into match probabilities through a five-stage pipeline. Each stage adds a layer of adjustment that improves predictive accuracy. The system uses Expected Goals (xG) as its core metric and Poisson distribution for probability calculations.
@@ -32,6 +40,12 @@ The current season weight is dynamically adjusted by completion percentage. If o
 
 **ML Analogy**: Similar to how we might weight recent training data more heavily in online learning, but with explicit recency decay.
 
+<p align="center">
+  <img src="images/01_goals_distribution.png" alt="Goals Distribution" width="700"/>
+</p>
+
+<p align="center"><em>Real data: home teams score more (1.70 avg) than away teams (1.34 avg). Both follow Poisson distributions.</em></p>
+
 ---
 
 ## Stage 2: League Context Adjustment
@@ -51,6 +65,12 @@ The current season weight is dynamically adjusted by completion percentage. If o
 - Team A has xG 1.8 (offensive) in a league where home teams average 1.6 xG
 - Team B has xG 1.8 in a league where home teams average 1.2 xG
 - After adjustment, Team A's effective xG will be lower relative to their league context
+
+<p align="center">
+  <img src="images/03_team_strength.png" alt="Team Strength" width="700"/>
+</p>
+
+<p align="center"><em>Team strength visualization: attack (x-axis) vs defense (y-axis). Bottom-right = strongest teams. Color = goal difference.</em></p>
 
 ---
 
@@ -124,6 +144,12 @@ Where `k` is a hyperparameter (typically 15) controlling shrinkage strength.
 - Since 2.22 < 2.50 → **value detected**
 
 **Interpretation**: Betting at 2.50 odds when the true probability is 45% yields +12.5% expected value.
+
+<p align="center">
+  <img src="images/04_calibration.png" alt="Model Calibration" width="550"/>
+</p>
+
+<p align="center"><em>Calibration validation: predicted probabilities align with observed frequencies. Essential for value detection.</em></p>
 
 ---
 

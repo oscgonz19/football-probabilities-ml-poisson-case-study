@@ -4,11 +4,25 @@
 
 ---
 
+<p align="center">
+  <img src="../images/05_match_prediction.png" alt="Dashboard de Prediccion" width="800"/>
+</p>
+
+<p align="center"><em>Ejemplo de salida: probabilidades 1X2, goles esperados (xG), BTTS y mercados Over/Under.</em></p>
+
+---
+
 ## Contexto
 
 Las cuotas deportivas codifican probabilidades implicitas, pero tambien incluyen el margen del bookmaker e ineficiencias del mercado. Este proyecto construye un motor de probabilidades independiente que estima probabilidades pre-partido y las compara contra cuotas del mercado para marcar senales potenciales de valor esperado positivo (+EV).
 
 El sistema opera como un pipeline diario a traves de multiples ligas de futbol, produciendo probabilidades para tres mercados principales: resultado del partido (1X2), ambos equipos anotan (BTTS), y total de goles (Over/Under). Combina rendimiento historico, goles esperados (xG), condiciones climaticas, y predicciones opcionales de un servicio ML externo—sin hacer de la dependencia ML un punto unico de falla.
+
+<p align="center">
+  <img src="../images/01_goals_distribution.png" alt="Distribucion de Goles" width="700"/>
+</p>
+
+<p align="center"><em>Goles siguen distribucion Poisson: locales promedian 1.70 goles vs 1.34 visitantes.</em></p>
 
 ---
 
@@ -89,13 +103,35 @@ El sistema transforma datos crudos de partidos en probabilidades de mercado a tr
 
 5. **Calculo de Probabilidades**: Solicita predicciones al servicio ML cuando esta disponible; de lo contrario calcula usando distribucion Poisson con offsets de eficiencia de finalizacion. El sistema recurre automaticamente a fallback si ML no esta disponible o retorna datos parciales.
 
+<p align="center">
+  <img src="../images/06_probability_grid.png" alt="Matriz de Probabilidades" width="600"/>
+</p>
+
+<p align="center"><em>Matriz de probabilidades Poisson: cada celda muestra la probabilidad de ese marcador exacto.</em></p>
+
 6. **Deteccion de Valor**: Compara probabilidades calculadas contra cuotas del mercado. Cuando cuotas implicitas son menores que cuotas del mercado, marca la oportunidad como +EV.
 
 7. **Persistencia**: Almacena todas las probabilidades, metricas ajustadas y flags de valor para consumo posterior.
 
 ---
 
+## Analisis de Equipos
+
+<p align="center">
+  <img src="../images/03_team_strength.png" alt="Fortaleza de Equipos" width="700"/>
+</p>
+
+<p align="center"><em>Equipos posicionados por fortaleza de ataque vs defensa. Cuadrante inferior derecho = equipos mas fuertes.</em></p>
+
+---
+
 ## Resultados
+
+<p align="center">
+  <img src="../images/04_calibration.png" alt="Calibracion del Modelo" width="500"/>
+</p>
+
+<p align="center"><em>Calibracion del modelo: predicciones alineadas con resultados reales (diagonal = calibracion perfecta).</em></p>
 
 El sistema corre diariamente para procesar jornadas a traves de multiples ligas, con:
 

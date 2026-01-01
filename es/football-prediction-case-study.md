@@ -4,9 +4,25 @@
 
 ---
 
+<p align="center">
+  <img src="../images/05_match_prediction.png" alt="Ejemplo de Prediccion" width="800"/>
+</p>
+
+<p align="center"><em>Salida completa de prediccion: probabilidades 1X2, goles esperados y oportunidades de mercado.</em></p>
+
+---
+
 ## Que es este Sistema
 
 Es un motor de prediccion de probabilidades deportivas que calcula probabilidades pre-partido para partidos de futbol y las compara contra las cuotas del mercado para identificar oportunidades de valor esperado positivo (+EV). El sistema opera como un pipeline automatizado diario a traves de multiples ligas, combinando rendimiento historico de equipos, metricas de goles esperados (xG), datos climaticos y predicciones opcionales de machine learning. Produce probabilidades para tres mercados principales—resultado del partido (1X2), ambos equipos anotan (BTTS) y total de goles (Over/Under)—mientras mantiene continuidad operativa mediante una arquitectura hibrida que no depende de ningun servicio externo individual.
+
+### Fundamento de Datos
+
+<p align="center">
+  <img src="../images/01_goals_distribution.png" alt="Distribucion de Goles" width="700"/>
+</p>
+
+<p align="center"><em>Distribucion historica de goles: equipos locales promedian 1.70 goles vs 1.34 para visitantes. Estas distribuciones tipo Poisson forman la base matematica del modelo.</em></p>
 
 ---
 
@@ -76,6 +92,14 @@ Disene e implemente la capa de integracion entre el motor estadistico base y un 
 
 El sistema ingesta datos de un proveedor de estadisticas deportivas y una API de clima, almacena registros normalizados en PostgreSQL, procesa estadisticas multi-temporada con ponderacion temporal, y ejecuta predicciones a traves de un pipeline hibrido. El servicio ML se llama cuando esta disponible pero nunca es una dependencia dura—el fallback estadistico asegura que cada partido se procese.
 
+### Analisis de Fortaleza de Equipos
+
+<p align="center">
+  <img src="../images/03_team_strength.png" alt="Fortaleza de Equipos" width="700"/>
+</p>
+
+<p align="center"><em>Equipos posicionados por ataque (goles a favor) vs defensa (goles en contra). Tamano = partidos, color = diferencia de goles.</em></p>
+
 ---
 
 ## Como Funciona
@@ -91,6 +115,12 @@ El pipeline transforma datos crudos de partidos en probabilidades de mercado a t
 4. **Asignacion de xG Pre-Partido**: Asigna goles esperados a cada equipo basado en su rendimiento ofensivo/defensivo, normalizado por contexto de liga (diferenciales local/visitante).
 
 5. **Calculo de Probabilidades**: Solicita predicciones al servicio ML si esta disponible. En timeout, error o respuesta parcial, automaticamente recurre a calculos de distribucion Poisson con ajustes de eficiencia de finalizacion.
+
+<p align="center">
+  <img src="../images/06_probability_grid.png" alt="Matriz de Probabilidades" width="600"/>
+</p>
+
+<p align="center"><em>Matriz de probabilidades Poisson: cada celda muestra la probabilidad de ese marcador exacto.</em></p>
 
 6. **Deteccion de Valor**: Compara probabilidades calculadas contra cuotas del mercado. Cuando las cuotas implicitas (1/probabilidad) son menores que las cuotas del mercado, marca la oportunidad como valor esperado positivo.
 
@@ -149,6 +179,12 @@ Los tests de regresion capturan drift de contrato que tests mockeados perderian�
 ---
 
 ## Resultados
+
+<p align="center">
+  <img src="../images/04_calibration.png" alt="Calibracion del Modelo" width="550"/>
+</p>
+
+<p align="center"><em>Grafico de calibracion: cuando predecimos 60%, los eventos ocurren ~60% del tiempo. Diagonal = calibracion perfecta.</em></p>
 
 El sistema corre diariamente a traves de multiples ligas, procesando jornadas completas a traves del pipeline hibrido.
 
