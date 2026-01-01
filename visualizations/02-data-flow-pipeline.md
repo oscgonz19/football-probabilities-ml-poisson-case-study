@@ -4,16 +4,6 @@
 
 ---
 
-## Historical Data Overview
-
-<p align="center">
-  <img src="../images/02_results_by_season.png" alt="Results by Season" width="700"/>
-</p>
-
-*Four seasons of data showing consistent patterns: ~44-46% home wins, ~21-25% draws, ~29-35% away wins.*
-
----
-
 ## End-to-End Flow
 
 ```mermaid

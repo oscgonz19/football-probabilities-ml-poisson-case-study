@@ -4,16 +4,6 @@
 
 ---
 
-## Real Example: Score Probability Heatmap
-
-<p align="center">
-  <img src="../images/06_probability_grid.png" alt="Score Probability Matrix" width="650"/>
-</p>
-
-*Each cell shows the probability of that exact scoreline. The 1-1 draw (12.4%) is the most likely result in this match.*
-
----
-
 ## The Poisson Distribution
 
 The Poisson distribution models the probability of a given number of events (goals) occurring in a fixed interval, given an expected rate (xG).

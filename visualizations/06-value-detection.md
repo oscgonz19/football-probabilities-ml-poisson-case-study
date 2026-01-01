@@ -4,16 +4,6 @@
 
 ---
 
-## Model Calibration
-
-<p align="center">
-  <img src="../images/04_calibration.png" alt="Model Calibration" width="550"/>
-</p>
-
-*A well-calibrated model: when we predict 60% probability, events occur ~60% of the time. This is essential for value detection.*
-
----
-
 ## The Core Concept
 
 **Value exists when the market offers better odds than the true probability suggests.**

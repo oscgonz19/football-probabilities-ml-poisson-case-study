@@ -4,16 +4,6 @@
 
 ---
 
-## Team Performance Analysis
-
-<p align="center">
-  <img src="../images/03_team_strength.png" alt="Team Strength Analysis" width="700"/>
-</p>
-
-*Teams positioned by attack (goals scored) vs defense (goals conceded). Bottom-right = strongest teams.*
-
----
-
 ## Component Overview
 
 ```mermaid

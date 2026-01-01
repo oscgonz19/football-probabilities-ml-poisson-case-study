@@ -1,16 +1,6 @@
 # Visualizations
 
-> Visual guide to the Football Probability Prediction System architecture and data flows
-
----
-
-## Sample Output
-
-<p align="center">
-  <img src="../images/05_match_prediction.png" alt="Match Prediction Example" width="800"/>
-</p>
-
-*A complete match prediction showing all probability markets and expected goals.*
+> Technical diagrams explaining the Football Probability Prediction System architecture and data flows
 
 ---
 
@@ -24,42 +14,6 @@
 | [xG Weighted Calculation](./04-xg-weighted-calculation.md) | Temporal weighting visualization | Statistics methodology |
 | [Poisson Score Matrix](./05-poisson-score-matrix.md) | Probability calculation example | Mathematical intuition |
 | [Value Detection](./06-value-detection.md) | Market comparison process | Business logic |
-
----
-
-## Data Insights
-
-### Goals Distribution
-
-<p align="center">
-  <img src="../images/01_goals_distribution.png" alt="Goals Distribution" width="700"/>
-</p>
-
-Home teams score more on average (1.70 vs 1.34), and both distributions follow the Poisson pattern.
-
-### Team Strength Analysis
-
-<p align="center">
-  <img src="../images/03_team_strength.png" alt="Team Strength" width="650"/>
-</p>
-
-Attack vs Defense positioning reveals team quality at a glance.
-
-### Score Probability Matrix
-
-<p align="center">
-  <img src="../images/06_probability_grid.png" alt="Probability Grid" width="600"/>
-</p>
-
-Every cell shows the probability of that exact scoreline occurring.
-
-### Model Calibration
-
-<p align="center">
-  <img src="../images/04_calibration.png" alt="Calibration" width="500"/>
-</p>
-
-Well-calibrated predictions—the model's confidence aligns with actual outcomes.
 
 ---
 

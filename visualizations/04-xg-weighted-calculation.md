@@ -4,16 +4,6 @@
 
 ---
 
-## Goals Distribution in Real Data
-
-<p align="center">
-  <img src="../images/01_goals_distribution.png" alt="Goals Distribution" width="700"/>
-</p>
-
-*Home teams score more on average (1.70 vs 1.34). These distributions follow the Poisson pattern we use for predictions.*
-
----
-
 ## What is xG (Expected Goals)?
 
 Expected Goals measures the quality of goal-scoring opportunities. Unlike actual goals (which have high variance), xG captures the underlying performance.
