@@ -309,6 +309,24 @@ Value Flags: BTTS Yes (+9%), Over 2.5 (+9%)
 ## Why Value Detection Matters
 
 ```mermaid
+%%{init: {
+  "theme": "dark",
+  "themeVariables": {
+    "primaryColor": "#0f172a",
+    "primaryTextColor": "#e5e7eb",
+    "primaryBorderColor": "#e5e7eb",
+
+    "secondaryColor": "#0f766e",
+    "secondaryTextColor": "#ecfdf5",
+    "secondaryBorderColor": "#ecfdf5",
+
+    "tertiaryColor": "#1e293b",
+    "tertiaryTextColor": "#e5e7eb",
+    "tertiaryBorderColor": "#94a3b8",
+
+    "lineColor": "#64748b"
+  }
+}}%%
 mindmap
   root((Value<br/>Detection))
     Edge Identification
@@ -327,6 +345,7 @@ mindmap
       Exploit slow market updates
       React to new information
       Beat closing line
+
 
 
 ```
