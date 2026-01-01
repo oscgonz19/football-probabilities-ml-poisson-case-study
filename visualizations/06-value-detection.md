@@ -236,10 +236,11 @@ flowchart TB
     E3 --> A3
     E4 --> A4
 
-    style A1 fill:#ffcccc
-    style A2 fill:#ffffcc
-    style A3 fill:#ccffcc
-    style A4 fill:#99ff99
+    style A1 fill:#7f1d1d,color:#ffffff,stroke:#450a0a,stroke-width:2px
+    style A2 fill:#f59e0b,color:#1f2937,stroke:#92400e,stroke-width:2px
+    style A3 fill:#10b981,color:#064e3b,stroke:#065f46,stroke-width:2px
+    style A4 fill:#065f46,color:#ecfdf5,stroke:#064e3b,stroke-width:3px
+
 ```
 
 ---
