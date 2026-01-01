@@ -309,44 +309,52 @@ Value Flags: BTTS Yes (+9%), Over 2.5 (+9%)
 ## Why Value Detection Matters
 
 ```mermaid
-%%{init: {
-  "theme": "dark",
-  "themeVariables": {
-    "primaryColor": "#0f172a",
-    "primaryTextColor": "#e5e7eb",
-    "primaryBorderColor": "#e5e7eb",
+flowchart TB
+    R(("Value<br/>Detection"))
 
-    "secondaryColor": "#0f766e",
-    "secondaryTextColor": "#ecfdf5",
-    "secondaryBorderColor": "#ecfdf5",
+    EI["Edge Identification"]
+    EI1["Find mispriced markets"]
+    EI2["Systematic approach"]
+    EI3["Data-driven decisions"]
 
-    "tertiaryColor": "#1e293b",
-    "tertiaryTextColor": "#e5e7eb",
-    "tertiaryBorderColor": "#94a3b8",
+    RM["Risk Management"]
+    RM1["Only act on positive EV"]
+    RM2["Threshold filtering"]
+    RM3["Avoid marginal bets"]
 
-    "lineColor": "#64748b"
-  }
-}}%%
-mindmap
-  root((Value<br/>Detection))
-    Edge Identification
-      Find mispriced markets
-      Systematic approach
-      Data-driven decisions
-    Risk Management
-      Only act on positive EV
-      Threshold filtering
-      Avoid marginal bets
-    Long-term Profitability
-      Law of large numbers
-      Compound edge over time
-      Discipline over luck
-    Market Efficiency
-      Exploit slow market updates
-      React to new information
-      Beat closing line
+    LP["Long-term Profitability"]
+    LP1["Law of large numbers"]
+    LP2["Compound edge over time"]
+    LP3["Discipline over luck"]
 
+    ME["Market Efficiency"]
+    ME1["Exploit slow market updates"]
+    ME2["React to new information"]
+    ME3["Beat closing line"]
 
+    R --> EI --> EI1
+    EI --> EI2
+    EI --> EI3
+
+    R --> RM --> RM1
+    RM --> RM2
+    RM --> RM3
+
+    R --> LP --> LP1
+    LP --> LP2
+    LP --> LP3
+
+    R --> ME --> ME1
+    ME --> ME2
+    ME --> ME3
+
+    class R core;
+    class EI,RM,LP,ME branch;
+    class EI1,EI2,EI3,RM1,RM2,RM3,LP1,LP2,LP3,ME1,ME2,ME3 leaf;
+
+    classDef core fill:#0f172a,color:#e5e7eb,stroke:#020617,stroke-width:3px;
+    classDef branch fill:#065f46,color:#ecfdf5,stroke:#064e3b,stroke-width:2px;
+    classDef leaf fill:#f8fafc,color:#1f2937,stroke:#cbd5e1;
 
 ```
 
